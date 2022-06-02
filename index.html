@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="script.js"></script>
+    <link href="style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="#">
+    </li>
+    <title>Game - 2048</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2048</h1>
+
+            <div class="scoreContainer">
+                <div class="currentScoreContainer">
+                    <p>SCORE</p>
+                    <p id="score">0</p>
+                </div>
+                <div class="bestContainer">
+                    <p>BEST</p>
+                    <p id="best">0</p>
+                </div>
+            </div>
+        </div>
+
+        <button>New Game</button>
+
+        <div class="gameContainer">
+            <div class="row row_0">
+                <div id="cell00"></div>
+                <div id="cell01"></div>
+                <div id="cell02"></div>
+                <div id="cell03"></div>
+            </div>
+
+            <div class="row row_1">
+                <div id="cell10"></div>
+                <div id="cell11"></div>
+                <div id="cell12"></div>
+                <div id="cell13"></div>
+            </div>
+
+            <div class="row row_2">
+                <div id="cell20"></div>
+                <div id="cell21"></div>
+                <div id="cell22"></div>
+                <div id="cell23"></div>
+            </div>
+
+            <div class="row row_3">
+                <div id="cell30"></div>
+                <div id="cell31"></div>
+                <div id="cell32"></div>
+                <div id="cell33"></div>
+            </div>
+
+
+            <div id="winMessage">
+                <div></div>
+                <p>You Win!</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
