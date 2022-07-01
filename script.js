@@ -1,18 +1,12 @@
+/*********************** DOM ELEMENT *************************/
 const scoreEl = document.querySelector('#score');
 const bestEl = document.querySelector('#best');
 const winMessageEl = document.querySelector('#winMessage');
-const LEN = 4; //size of the gameboard
-let score = 0;
+
+/********************** INITIALIZE VARIABLES ******************/
+let currentScore = 0;
 let bestScore = 0;
 let win=false;
-
-const classes = ["c0", "c2", "c4", "c8", "c16", "c32"," c64", "c128", "c256", "c512", "c1024", "c2048"];
-const cells = [
-                    ['cell00', 'cell01', 'cell02', 'cell03'],
-                    ['cell10', 'cell11', 'cell12', 'cell13'],
-                    ['cell20', 'cell21', 'cell22', 'cell23'],
-                    ['cell30', 'cell31', 'cell32', 'cell33'],
-                  ]
 
 let game = [
     [0, 0, 0, 0],
@@ -21,37 +15,54 @@ let game = [
     [2, 2, 0, 0]
 ]
 
+/************************** CONSTANTS *************************/
+const LEN = 4; //size of the gameboard
+const classes = ["c0", "c2", "c4", "c8", "c16", "c32"," c64", "c128", "c256", "c512", "c1024", "c2048"];
+const cells = [
+                    ['cell00', 'cell01', 'cell02', 'cell03'],
+                    ['cell10', 'cell11', 'cell12', 'cell13'],
+                    ['cell20', 'cell21', 'cell22', 'cell23'],
+                    ['cell30', 'cell31', 'cell32', 'cell33'],
+                  ]
+
+
+/******************** Update the gameboard **********************/
+// Update the canvas with the current state of the game matrix
 updateGameboard();
 
 
-/************************************* EVENT LISTENER **********************************/
+/************************* EVENT LISTENER ************************/
 document.addEventListener('keydown', e=>{
     switch(e.key){
         case 'ArrowUp':
-            if(win==false) moveUp();
+            if(win===false) moveUp();
             break;
         case 'ArrowDown':
-            if(win==false) moveDown();
+            if(win===false) moveDown();
             break;
         case 'ArrowLeft':
-            if(win==false) moveLeft();
+            if(win===false) moveLeft();
             break;
         case 'ArrowRight':
-            if(win==false) moveRight();
+            if(win===false) moveRight();
             break;
     }
+    generateNewTile();
+    updateGameboard()
 })
 
 document.querySelector('button').addEventListener('click', ()=>{
     resetGameboard();
     updateGameboard();
-    score=0;
-    scoreEl.innerHTML = score;
+    currentScore=0;
+    scoreEl.innerHTML = currentScore;
     win=false;
     winMessageEl.style.visibility = 'hidden';
 })
 
-/*********************************** GAMEBOARD FUNCTIONS **********************************/
+/************************* GAMEBOARD FUNCTIONS *********************/
+
+// Reset the game matrix back to initial state
 function resetGameboard(){
     game = [
         [0, 0, 0, 0],
@@ -61,25 +72,24 @@ function resetGameboard(){
     ]
 }
 
+// Update the canvas with the current state of the game matrix
 function updateGameboard(){
     for(let row=0; row<LEN; row++){
         for(let col=0;col<LEN; col++){
             let classIndex = game[row][col]==0 ? 0 : Math.log(game[row][col])/Math.log(2);
             let text = game[row][col]==0 ? "" : game[row][col];
-            document.querySelector(`#${cells[row][col]}`).className = classes[classIndex];
+            document.querySelector(`#${cells[row][col]}`).className = classes[classIndex]; 
             document.querySelector(`#${cells[row][col]}`).innerHTML = text;
         }
     }
 }
 
-/*********************************** CONTROL FUNCTIONS **********************************/
+/************************ CONTROL FUNCTIONS ***************************/
 function moveLeft(){
     for(let row=0; row<LEN; row++){
         let newRow = merge(game[row]);
         game[row]=newRow;
     }
-    generateNewTile();
-    updateGameboard()
 }
 
 function moveRight(){
@@ -91,8 +101,6 @@ function moveRight(){
         newRow = merge(newRow).reverse();
         game[row]=newRow;
     }
-    generateNewTile();
-    updateGameboard()
 }
 
 function moveDown(){
@@ -106,8 +114,6 @@ function moveDown(){
             game[i][col]=newCol[i];
         }
     }
-    generateNewTile();
-    updateGameboard()
 }
 
 function moveUp(){
@@ -121,21 +127,19 @@ function moveUp(){
             game[i][col]=newCol[i];
         }
     }
-    generateNewTile();
-    updateGameboard();
 }
 
-/*********************************** HELPER FUNCTIONS **********************************/
+/*********************** HELPER FUNCTIONS ************************/
 function merge(row){
     // Merge cells with same number
     for(let i=0;i<LEN-1; i++){
         if(row[i]===row[i+1]){
             row[i]=row[i]*2
-            score += row[i];
-            bestScore = score>bestScore ? score : bestScore; 
+            currentScore += row[i];
+            bestScore = currentScore>bestScore ? currentScore : bestScore; 
             row[i+1]=0;
 
-            scoreEl.innerHTML = score;
+            scoreEl.innerHTML = currentScore;
             bestEl.innerHTML = bestScore;
 
             if(row[i]===2048){
@@ -160,13 +164,13 @@ function generateNewTile(){
     for(let row=0; row<LEN; row++){
         for(let col=0;col<LEN; col++){
             if(game[row][col]===0){
-                emptyRow=row;
-                emptyCol=col;
 
                 //If random number is zero, look for the next empty cell.
                 //If random number is two, change the cell value from 0 to 2.
                 let randomNumber = getRandomNumber();
                 if(randomNumber===2){
+                    emptyRow=row;
+                    emptyCol=col;    
                     game[row][col] = randomNumber;
                     return;
                 }
@@ -188,4 +192,3 @@ function getRandomNumber(){
         return 2;
     }
 }
-
